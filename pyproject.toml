@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "narhvaltest1"
+version = "0.1.0"
+description = "A simple CLI wrapper around the OpenAI Responses API"
+readme = "README.md"
+authors = [{ name = "Narhval" }]
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.30.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[project.scripts]
+run-openai-agent = "agent_cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["openai_agent", "agent_cli"]
