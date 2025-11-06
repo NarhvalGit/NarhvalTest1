@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI Chat Client</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 OpenAI Chat Client</h1>
+            <p class="subtitle">Stel je vraag en krijg een antwoord van AI</p>
+        </header>
+
+        <main>
+            <!-- Model Selector -->
+            <div class="model-selector">
+                <label for="model-select">Model:</label>
+                <select id="model-select">
+                    <option value="gpt-4o-mini" selected>GPT-4o Mini (Snel & Goedkoop)</option>
+                    <option value="gpt-4o">GPT-4o (Krachtig)</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                </select>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chat-container">
+                <div class="welcome-message">
+                    <p>👋 Welkom! Stel een vraag om te beginnen.</p>
+                </div>
+            </div>
+
+            <!-- Input Form -->
+            <div class="input-container">
+                <textarea
+                    id="prompt-input"
+                    placeholder="Typ hier je vraag of prompt..."
+                    rows="3"
+                ></textarea>
+                <button id="send-button" onclick="sendPrompt()">
+                    <span id="button-text">Verzenden</span>
+                    <span id="button-loader" class="loader hidden"></span>
+                </button>
+            </div>
+
+            <!-- Status -->
+            <div class="status" id="status">
+                <span class="status-indicator" id="status-indicator">●</span>
+                <span id="status-text">Niet verbonden</span>
+            </div>
+        </main>
+
+        <footer>
+            <p>Powered by OpenAI API | Made with ❤️</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Server Dependencies voor OpenAI Chat Webapp
+# Install met: pip install -r requirements-server.txt
+
+# Web Framework
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# OpenAI Client (al aanwezig in pyproject.toml, maar hier voor duidelijkheid)
+openai>=1.30.0
+
+# Optioneel: Production WSGI Server
+gunicorn>=21.2.0
+
+# Optioneel: Environment Variable Management
+python-dotenv>=1.0.0
