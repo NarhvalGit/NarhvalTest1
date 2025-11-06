@@ -1,0 +1,84 @@
+{% extends "prompt_agent/base.html" %}
+
+{% block title %}Prompt Details - #{{ prompt.id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-file-text"></i> Prompt Details - #{{ prompt.id }}</span>
+                <a href="{% url 'history' %}" class="btn btn-sm btn-light">
+                    <i class="bi bi-arrow-left"></i> Terug
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h5><i class="bi bi-info-circle"></i> Metadata</h5>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th style="width: 30%;">Status</th>
+                            <td>
+                                <span class="status-badge status-{{ prompt.status }}">
+                                    {{ prompt.get_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Model</th>
+                            <td>{{ prompt.model_used }}</td>
+                        </tr>
+                        {% if prompt.session %}
+                        <tr>
+                            <th>Sessie</th>
+                            <td>{{ prompt.session.name }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>Aangemaakt</th>
+                            <td>{{ prompt.created_at|date:"d-m-Y H:i:s" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Laatst bijgewerkt</th>
+                            <td>{{ prompt.updated_at|date:"d-m-Y H:i:s" }}</td>
+                        </tr>
+                        {% if prompt.processing_time %}
+                        <tr>
+                            <th>Verwerkingstijd</th>
+                            <td>{{ prompt.processing_time|floatformat:3 }} seconden</td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                </div>
+
+                <div class="mb-4">
+                    <h5><i class="bi bi-person"></i> Jouw Prompt</h5>
+                    <div class="prompt-text">
+                        {{ prompt.prompt }}
+                    </div>
+                </div>
+
+                {% if prompt.status == 'completed' %}
+                <div class="mb-4">
+                    <h5><i class="bi bi-robot"></i> AI Antwoord</h5>
+                    <div class="response-text">
+                        {{ prompt.response }}
+                    </div>
+                </div>
+                {% elif prompt.status == 'failed' %}
+                <div class="mb-4">
+                    <h5><i class="bi bi-exclamation-triangle"></i> Foutmelding</h5>
+                    <div class="alert alert-danger">
+                        {{ prompt.error_message }}
+                    </div>
+                </div>
+                {% elif prompt.status == 'processing' %}
+                <div class="alert alert-info">
+                    <i class="bi bi-hourglass-split"></i> Deze prompt wordt nog verwerkt...
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
