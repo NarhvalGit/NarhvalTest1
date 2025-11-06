@@ -1,0 +1,71 @@
+{% extends "prompt_agent/base.html" %}
+
+{% block title %}Prompt Agent - Geschiedenis{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-clock-history"></i> Prompt Geschiedenis
+            </div>
+            <div class="card-body">
+                {% if prompts %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Prompt</th>
+                                    <th>Status</th>
+                                    <th>Model</th>
+                                    <th>Datum</th>
+                                    <th>Tijd</th>
+                                    <th>Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prompt in prompts %}
+                                <tr>
+                                    <td>{{ prompt.id }}</td>
+                                    <td>
+                                        {% if prompt.prompt|length > 50 %}
+                                            {{ prompt.prompt|slice:":50" }}...
+                                        {% else %}
+                                            {{ prompt.prompt }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="status-badge status-{{ prompt.status }}">
+                                            {{ prompt.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ prompt.model_used }}</td>
+                                    <td>{{ prompt.created_at|date:"d-m-Y H:i" }}</td>
+                                    <td>
+                                        {% if prompt.processing_time %}
+                                            {{ prompt.processing_time|floatformat:2 }}s
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'prompt_detail' prompt.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Nog geen prompts verzonden.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

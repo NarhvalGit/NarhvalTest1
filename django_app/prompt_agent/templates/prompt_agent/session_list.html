@@ -1,0 +1,64 @@
+{% extends "prompt_agent/base.html" %}
+
+{% block title %}Prompt Agent - Sessies{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-gear"></i> Agent Sessies</span>
+                <a href="{% url 'session_create' %}" class="btn btn-sm btn-light">
+                    <i class="bi bi-plus-circle"></i> Nieuwe Sessie
+                </a>
+            </div>
+            <div class="card-body">
+                {% if sessions %}
+                    <div class="row">
+                        {% for session in sessions %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title mb-0">{{ session.name }}</h5>
+                                        {% if session.is_active %}
+                                            <span class="badge bg-success">Actief</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactief</span>
+                                        {% endif %}
+                                    </div>
+
+                                    <p class="card-text">
+                                        <strong>Model:</strong> {{ session.model }}<br>
+                                        <strong>Aangemaakt:</strong> {{ session.created_at|date:"d-m-Y H:i" }}<br>
+                                        <strong>Prompts:</strong> {{ session.prompts.count }}
+                                    </p>
+
+                                    {% if session.system_prompt %}
+                                    <details class="mb-2">
+                                        <summary class="text-muted" style="cursor: pointer;">System Prompt</summary>
+                                        <pre class="mt-2 p-2 bg-light rounded" style="font-size: 0.85rem;">{{ session.system_prompt }}</pre>
+                                    </details>
+                                    {% endif %}
+
+                                    <div class="d-flex gap-2">
+                                        <a href="{% url 'session_edit' session.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-pencil"></i> Bewerken
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Nog geen sessies aangemaakt.
+                        <a href="{% url 'session_create' %}" class="alert-link">Maak er nu een aan!</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

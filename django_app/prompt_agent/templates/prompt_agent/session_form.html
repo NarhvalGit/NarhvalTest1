@@ -1,0 +1,75 @@
+{% extends "prompt_agent/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-gear"></i> {{ title }}
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">
+                            {{ form.name.label }}
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger">{{ form.name.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.model.id_for_label }}" class="form-label">
+                            {{ form.model.label }}
+                        </label>
+                        {{ form.model }}
+                        <small class="form-text text-muted">
+                            Bijvoorbeeld: gpt-4o-mini, gpt-4o, gpt-3.5-turbo
+                        </small>
+                        {% if form.model.errors %}
+                            <div class="text-danger">{{ form.model.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.system_prompt.id_for_label }}" class="form-label">
+                            {{ form.system_prompt.label }}
+                        </label>
+                        {{ form.system_prompt }}
+                        <small class="form-text text-muted">
+                            Optionele system prompt om het gedrag van de agent te configureren
+                        </small>
+                        {% if form.system_prompt.errors %}
+                            <div class="text-danger">{{ form.system_prompt.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        {{ form.is_active }}
+                        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                            {{ form.is_active.label }}
+                        </label>
+                        {% if form.is_active.errors %}
+                            <div class="text-danger">{{ form.is_active.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Opslaan
+                        </button>
+                        <a href="{% url 'session_list' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Annuleren
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

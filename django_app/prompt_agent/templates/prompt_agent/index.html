@@ -1,0 +1,136 @@
+{% extends "prompt_agent/base.html" %}
+
+{% block title %}Prompt Agent - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card prompt-input-section">
+            <h2 class="mb-4">
+                <i class="bi bi-chat-dots"></i> Stel je vraag
+            </h2>
+
+            <form method="post" id="promptForm">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="{{ form.prompt.id_for_label }}" class="form-label">
+                        {{ form.prompt.label }}
+                    </label>
+                    {{ form.prompt }}
+                    {% if form.prompt.help_text %}
+                        <small class="form-text text-muted">{{ form.prompt.help_text }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label for="{{ form.session.id_for_label }}" class="form-label">
+                        {{ form.session.label }}
+                    </label>
+                    {{ form.session }}
+                    {% if form.session.help_text %}
+                        <small class="form-text text-muted">{{ form.session.help_text }}</small>
+                    {% endif %}
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-submit btn-lg">
+                        <i class="bi bi-send"></i> Verstuur Prompt
+                    </button>
+                </div>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p class="mt-3">Verwerken van je prompt...</p>
+            </div>
+        </div>
+
+        {% if active_sessions %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-gear"></i> Actieve Sessies
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for session in active_sessions %}
+                    <div class="col-md-6 mb-2">
+                        <div class="p-3 border rounded">
+                            <h6 class="mb-1">{{ session.name }}</h6>
+                            <small class="text-muted">Model: {{ session.model }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if recent_prompts %}
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-clock-history"></i> Recente Prompts
+            </div>
+            <div class="card-body">
+                {% for prompt in recent_prompts %}
+                <div class="response-card">
+                    <div class="prompt-text">
+                        <strong><i class="bi bi-person"></i> Jouw prompt:</strong>
+                        <p class="mb-0 mt-2">{{ prompt.prompt }}</p>
+                    </div>
+
+                    {% if prompt.status == 'completed' %}
+                    <div class="response-text">
+                        <strong><i class="bi bi-robot"></i> AI Antwoord:</strong>
+                        <p class="mb-0 mt-2">{{ prompt.response }}</p>
+                    </div>
+                    {% elif prompt.status == 'failed' %}
+                    <div class="alert alert-danger mb-0">
+                        <strong><i class="bi bi-exclamation-triangle"></i> Fout:</strong>
+                        <p class="mb-0 mt-2">{{ prompt.error_message }}</p>
+                    </div>
+                    {% elif prompt.status == 'processing' %}
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-hourglass-split"></i> Verwerken...
+                    </div>
+                    {% endif %}
+
+                    <div class="meta-info d-flex justify-content-between align-items-center">
+                        <span>
+                            <span class="status-badge status-{{ prompt.status }}">
+                                {{ prompt.get_status_display }}
+                            </span>
+                            <span class="ms-2">
+                                <i class="bi bi-cpu"></i> {{ prompt.model_used }}
+                            </span>
+                        </span>
+                        <span>
+                            <i class="bi bi-calendar"></i> {{ prompt.created_at|date:"d-m-Y H:i" }}
+                            {% if prompt.processing_time %}
+                                <span class="ms-2">
+                                    <i class="bi bi-speedometer"></i> {{ prompt.processing_time|floatformat:2 }}s
+                                </span>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="mt-2">
+                        <a href="{% url 'prompt_detail' prompt.id %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i> Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Show loading indicator on form submit
+    document.getElementById('promptForm').addEventListener('submit', function() {
+        document.getElementById('loading').classList.add('active');
+    });
+</script>
+{% endblock %}
