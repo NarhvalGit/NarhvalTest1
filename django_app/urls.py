@@ -4,5 +4,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('prompt_agent.urls')),
+    path('', include('django_app.prompt_agent.urls')),
 ]
